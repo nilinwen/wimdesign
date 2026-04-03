@@ -6,13 +6,12 @@
     <title>WIM Design | 空间叙事</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* 1. 字体预设：如果网络拦截了 Google Fonts，自动使用系统最优雅的无衬线体 */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400&family=Noto+Sans+SC:wght@100;300&display=swap');
         
         html { scroll-behavior: smooth; scroll-padding-top: 100px; }
         
         body { 
-            font-family: 'Inter', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            font-family: 'Inter', 'Noto Sans SC', sans-serif; 
             background-color: #F2F2F2; 
             color: #1A1A1A; 
             margin: 0;
@@ -20,12 +19,18 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* 2. 基础布局保护：即使 Tailwind 加载失败，这些样式也能保证网页不崩 */
-        .fixed-nav { position: fixed; top: 0; width: 100%; z-index: 50; display: flex; justify-content: space-between; align-items: center; padding: 40px; background: rgba(242, 242, 242, 0.7); backdrop-filter: blur(10px); }
-        .nav-link { text-transform: uppercase; letter-spacing: 0.25em; font-size: 10px; font-weight: 300; opacity: 0.4; transition: 0.4s; border: none; background: none; cursor: pointer; }
-        .nav-link:hover { opacity: 1; }
+        /* 导航链接：全大写双语 */
+        .nav-link { 
+            text-transform: uppercase; 
+            letter-spacing: 0.25em; 
+            font-size: 10px; 
+            font-weight: 300;
+            opacity: 0.4;
+            transition: all 0.4s ease;
+        }
+        .nav-link:hover { opacity: 1; letter-spacing: 0.3em; }
 
-        /* 3. 弹窗逻辑增强 */
+        /* 弹窗核心样式 */
         .modal-overlay { 
             display: none; 
             position: fixed; 
@@ -33,40 +38,43 @@
             z-index: 1000; 
             background: rgba(242, 242, 242, 0.99); 
             backdrop-filter: blur(35px); 
-            overflow-y: auto;
-            padding: 40px;
         }
-        .modal-overlay.active { display: flex !important; flex-direction: column; }
+        .modal-overlay.active { display: flex !important; }
 
-        /* 4. 分类按钮 */
+        /* 分类按钮激活态 */
         .filter-active { opacity: 1 !important; border-bottom: 1px solid #000; padding-bottom: 4px; }
-        .project-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 80px; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        
+        .project-box { transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1); }
+        .line-subtle { height: 0.5px; background-color: rgba(0,0,0,0.1); width: 100%; }
+        
+        .tracking-ultra { letter-spacing: 0.4em; }
     </style>
 </head>
-<body class="selection:bg-black selection:text-white">
+<body class="antialiased selection:bg-black selection:text-white">
 
-    <nav class="fixed-nav">
-        <h1 style="font-size: 14px; font-weight: 300; letter-spacing: 0.4em; text-transform: uppercase;">WIM Design</h1>
-        <div class="hidden md:flex items-center gap-10">
-            <a href="#work-section" class="nav-link" style="text-decoration: none; color: inherit;">WORK / 作品</a>
+    <nav class="fixed top-0 w-full z-50 px-10 py-10 flex justify-between items-center bg-[#F2F2F2]/60 backdrop-blur-md">
+        <h1 class="text-sm font-light tracking-[0.4em] uppercase cursor-default">WIM Design</h1>
+        <div class="hidden md:flex space-x-10 items-center">
+            <a href="#work-section" class="nav-link">WORK / 作品</a>
             <button onclick="showModal('modal-process')" class="nav-link">PROCESS / 流程</button>
             <button onclick="showModal('modal-about')" class="nav-link">ABOUT / 关于</button>
             <button onclick="showModal('modal-contact')" class="nav-link">CONTACT / 联系</button>
         </div>
     </nav>
 
-    <main class="max-w-7xl mx-auto px-10" style="padding-top: 200px; padding-bottom: 100px;">
+    <main class="pt-52 pb-20 px-10 md:px-20 max-w-7xl mx-auto">
         
-        <section style="margin-bottom: 240px;">
-            <p style="font-size: 9px; text-transform: uppercase; letter-spacing: 0.6em; opacity: 0.3; margin-bottom: 30px; font-style: italic;">Based in Shanghai / 2026</p>
-            <h2 style="font-size: clamp(32px, 5vw, 60px); font-weight: 100; letter-spacing: -0.02em; line-height: 1.2;">
+        <section class="mb-60">
+            <p class="text-[9px] uppercase tracking-[0.6em] opacity-30 mb-8 italic">Based in Shanghai / 2026</p>
+            <h2 class="text-4xl md:text-6xl font-thin tracking-tight leading-[1.2] max-w-5xl">
                 Precision is the rhythm of <br> 
-                <span style="font-style: italic; opacity: 0.8; border-bottom: 1px solid rgba(0,0,0,0.1);">built environments.</span>
+                <span class="italic font-light opacity-80 underline underline-offset-8 decoration-1">built environments.</span>
             </h2>
         </section>
 
-        <div id="work-section">
-            <div id="category-bar" style="display: flex; gap: 40px; margin-bottom: 80px; font-size: 9px; text-transform: uppercase; letter-spacing: 0.3em; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 20px;">
+        <div id="work-section" class="pt-10">
+            <div id="category-bar" class="flex flex-wrap gap-x-12 gap-y-6 mb-24 text-[9px] uppercase tracking-[0.3em] border-b border-black/5 pb-6">
                 <button onclick="applyFilter('all', this)" class="filter-btn filter-active opacity-40">全部 ALL</button>
                 <button onclick="applyFilter('retail', this)" class="filter-btn opacity-40">零售 RETAIL</button>
                 <button onclick="applyFilter('fnb', this)" class="filter-btn opacity-40">餐饮 F&B</button>
@@ -74,125 +82,215 @@
                 <button onclick="applyFilter('sport', this)" class="filter-btn opacity-40">运动 SPORT</button>
             </div>
 
-            <div class="project-grid">
-                <div class="project-box retail" onclick="showModal('modal-mizuno')" style="cursor: pointer;">
-                    <div style="aspect-ratio: 3/4; background: #E8E8E8; margin-bottom: 30px; overflow: hidden;">
-                        <svg width="100%" height="100%" viewBox="0 0 300 400">
-                            <text x="50%" y="50%" text-anchor="middle" font-size="10" font-weight="100" fill="#AAA" letter-spacing="2">MIZUNO RETAIL</text>
-                        </svg>
+            <div id="work-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-16 gap-y-32">
+                <div class="project-box retail group cursor-pointer" onclick="showModal('modal-mizuno')">
+                    <div class="aspect-[3/4] mb-8 overflow-hidden bg-neutral-200 relative">
+                        <svg class="w-full h-full text-neutral-400 group-hover:scale-105 transition-transform duration-1000" viewBox="0 0 300 400"><rect width="300" height="400" fill="#E8E8E8"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-weight="100" font-size="10" fill="#999" letter-spacing="2">MIZUNO RETAIL</text></svg>
                     </div>
-                    <div style="display: flex; justify-content: space-between; border-top: 1px solid rgba(0,0,0,0.05); padding-top: 15px; text-transform: uppercase;">
-                        <span style="font-size: 11px; font-weight: 300; letter-spacing: 0.1em; font-style: italic;">Mizuno Concept</span>
-                        <span style="font-size: 9px; opacity: 0.3; font-style: italic;">Retail / 零售</span>
+                    <div class="flex justify-between items-baseline border-t border-black/5 pt-4 uppercase">
+                        <h4 class="text-xs font-light tracking-widest italic">Mizuno Concept</h4>
+                        <span class="text-[9px] opacity-30 tracking-widest italic text-right">Retail / 零售</span>
                     </div>
                 </div>
 
-                <div class="project-box exhibition" onclick="showModal('modal-box')" style="cursor: pointer; margin-top: 40px;">
-                    <div style="aspect-ratio: 3/4; background: #DCDCDC; margin-bottom: 30px; overflow: hidden;">
-                        <svg width="100%" height="100%" viewBox="0 0 300 400">
-                            <text x="50%" y="50%" text-anchor="middle" font-size="10" font-weight="100" fill="#888" letter-spacing="2">BOX PAVILION</text>
-                        </svg>
+                <div class="project-box exhibition group cursor-pointer md:mt-32" onclick="showModal('modal-box')">
+                    <div class="aspect-[3/4] mb-8 overflow-hidden bg-neutral-200 relative">
+                        <svg class="w-full h-full text-neutral-400 group-hover:scale-105 transition-transform duration-1000" viewBox="0 0 300 400"><rect width="300" height="400" fill="#DCDCDC"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-weight="100" font-size="10" fill="#666" letter-spacing="2">BOX PAVILION</text></svg>
                     </div>
-                    <div style="display: flex; justify-content: space-between; border-top: 1px solid rgba(0,0,0,0.05); padding-top: 15px; text-transform: uppercase;">
-                        <span style="font-size: 11px; font-weight: 300; letter-spacing: 0.1em; font-style: italic;">Box Pavilion</span>
-                        <span style="font-size: 9px; opacity: 0.3; font-style: italic;">Exhibition / 展览</span>
+                    <div class="flex justify-between items-baseline border-t border-black/5 pt-4 uppercase">
+                        <h4 class="text-xs font-light tracking-widest italic">Box Pavilion</h4>
+                        <span class="text-[9px] opacity-30 tracking-widest italic text-right">Exhibition / 展览</span>
+                    </div>
+                </div>
+
+                <div class="project-box fnb group cursor-pointer" onclick="showModal('modal-bistro')">
+                    <div class="aspect-[3/4] mb-8 overflow-hidden bg-neutral-200 relative">
+                        <svg class="w-full h-full text-neutral-400 group-hover:scale-105 transition-transform duration-1000" viewBox="0 0 300 400"><rect width="300" height="400" fill="#E0E0E0"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-weight="100" font-size="10" fill="#999" letter-spacing="2">WOVEN BISTRO</text></svg>
+                    </div>
+                    <div class="flex justify-between items-baseline border-t border-black/5 pt-4 uppercase">
+                        <h4 class="text-xs font-light tracking-widest italic">Woven Bistro</h4>
+                        <span class="text-[9px] opacity-30 tracking-widest italic text-right">F&B / 餐饮</span>
+                    </div>
+                </div>
+
+                <div class="project-box exhibition group cursor-pointer" onclick="showModal('modal-fish')">
+                    <div class="aspect-[3/4] mb-8 overflow-hidden bg-neutral-200 relative">
+                        <svg class="w-full h-full text-neutral-400 group-hover:scale-105 transition-transform duration-1000" viewBox="0 0 300 400"><rect width="300" height="400" fill="#C0C0C0"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-weight="100" font-size="10" fill="#555" letter-spacing="2">FISH MARKET</text></svg>
+                    </div>
+                    <div class="flex justify-between items-baseline border-t border-black/5 pt-4 uppercase">
+                        <h4 class="text-xs font-light tracking-widest italic">Fish Market</h4>
+                        <span class="text-[9px] opacity-30 tracking-widest italic text-right">Exhibition / 展览</span>
+                    </div>
+                </div>
+
+                <div class="project-box sport group cursor-pointer md:mt-32" onclick="showModal('modal-moss')">
+                    <div class="aspect-[3/4] mb-8 overflow-hidden bg-neutral-200 relative">
+                        <svg class="w-full h-full text-neutral-400 group-hover:scale-105 transition-transform duration-1000" viewBox="0 0 300 400"><rect width="300" height="400" fill="#D9D9D9"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-weight="100" font-size="10" fill="#888" letter-spacing="2">MOSS STUDIO</text></svg>
+                    </div>
+                    <div class="flex justify-between items-baseline border-t border-black/5 pt-4 uppercase">
+                        <h4 class="text-xs font-light tracking-widest italic">Moss Dance</h4>
+                        <span class="text-[9px] opacity-30 tracking-widest italic text-right">Sport / 运动</span>
+                    </div>
+                </div>
+
+                <div class="project-box retail group cursor-pointer" onclick="showModal('modal-retail2')">
+                    <div class="aspect-[3/4] mb-8 overflow-hidden bg-neutral-200 relative">
+                        <svg class="w-full h-full text-neutral-400 group-hover:scale-105 transition-transform duration-1000" viewBox="0 0 300 400"><rect width="300" height="400" fill="#ECECEC"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-weight="100" font-size="10" fill="#BBB" letter-spacing="2">CONCEPT STORE</text></svg>
+                    </div>
+                    <div class="flex justify-between items-baseline border-t border-black/5 pt-4 uppercase">
+                        <h4 class="text-xs font-light tracking-widest italic">WIM Concept</h4>
+                        <span class="text-[9px] opacity-30 tracking-widest italic text-right">Retail / 零售</span>
                     </div>
                 </div>
             </div>
         </div>
     </main>
 
-    <div id="modal-about" class="modal-overlay" onclick="hideModal('modal-about')">
-        <div class="max-w-6xl mx-auto w-full" onclick="event.stopPropagation()" style="margin-top: 100px;">
-            <button onclick="hideModal('modal-about')" style="position: fixed; top: 40px; right: 40px;" class="nav-link text-black">CLOSE / 关闭</button>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-20">
-                <div style="aspect-ratio: 3/4; background: #DDD; display: flex; align-items: center; justify-content: center; font-size: 10px; opacity: 0.2; letter-spacing: 0.4em; text-transform: uppercase;">Portrait / 肖像</div>
-                <div>
-                    <h3 style="font-size: 10px; letter-spacing: 0.4em; opacity: 0.3; text-transform: uppercase; margin-bottom: 40px;">About / 关于</h3>
-                    <p style="font-size: 20px; font-weight: 300; margin-bottom: 60px;">Design is an act of muscle memory. Precision in space. Rhythm in motion.</p>
-                    <p style="font-size: 16px; font-weight: 300; border-top: 1px solid rgba(0,0,0,0.05); padding-top: 40px; color: #666;">设计是一场关于肌肉记忆的修行。基于 3P 框架（精准、性能、目的），寻找空间中的“留白”，让静谧成为最高级的精准。</p>
+    <div id="modal-process" class="modal-overlay px-10 py-20 overflow-y-auto no-scrollbar" onclick="hideModal('modal-process')">
+        <div class="max-w-7xl mx-auto w-full relative" onclick="event.stopPropagation()">
+            <button onclick="hideModal('modal-process')" class="fixed top-10 right-10 text-[10px] tracking-ultra opacity-40">CLOSE / 关闭</button>
+            <div class="mb-40 border-b border-black/5 pb-12">
+                <h2 class="text-5xl font-thin tracking-tight italic opacity-80 uppercase">Design Workflow / 服务流程.</h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 pt-4 text-neutral-600">
+                <div class="space-y-8">
+                    <span class="text-[9px] opacity-30 uppercase tracking-widest italic">Stage 01</span>
+                    <h4 class="text-xs font-light uppercase tracking-ultra text-black">Concept / 概念</h4>
+                    <p class="text-[11px] font-light opacity-80 leading-loose">深入调研场地属性与品牌内核，确立 3P 核心方向与 Tech Shibumi 视觉基调。</p>
+                </div>
+                <div class="space-y-8 border-l border-black/5 pl-8">
+                    <span class="text-[9px] opacity-30 uppercase tracking-widest italic">Stage 02</span>
+                    <h4 class="text-xs font-light uppercase tracking-ultra text-black">Design / 深化</h4>
+                    <p class="text-[11px] font-light opacity-80 leading-loose">空间功能重排，光影效果模拟。通过高精度效果图与材质样板，将构想具象化。</p>
+                </div>
+                <div class="space-y-8 border-l border-black/5 pl-8">
+                    <span class="text-[9px] opacity-30 uppercase tracking-widest italic">Stage 03</span>
+                    <h4 class="text-xs font-light uppercase tracking-ultra text-black">Technical / 施工图</h4>
+                    <p class="text-[11px] font-light opacity-80 leading-loose">输出标准化的全套施工图纸，严格把控节点细节，确保设计语言精准落地。</p>
+                </div>
+                <div class="space-y-8 border-l border-black/5 pl-8">
+                    <span class="text-[9px] opacity-30 uppercase tracking-widest italic">Stage 04</span>
+                    <h4 class="text-xs font-light uppercase tracking-ultra text-black">On-site / 现场</h4>
+                    <p class="text-[11px] font-light opacity-80 leading-loose">施工周期全程跟进，解决现场突发状况，完成从纸面到物理空间的跃迁。</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="modal-process" class="modal-overlay" onclick="hideModal('modal-process')">
-        <div class="max-w-7xl mx-auto w-full" onclick="event.stopPropagation()" style="margin-top: 100px;">
-            <button onclick="hideModal('modal-process')" style="position: fixed; top: 40px; right: 40px;" class="nav-link text-black">CLOSE / 关闭</button>
-            <h2 style="font-size: 40px; font-weight: 100; font-style: italic; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 40px; margin-bottom: 80px; text-transform: uppercase;">Workflow / 服务流程</h2>
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-10">
-                <div style="border-left: 1px solid rgba(0,0,0,0.05); padding-left: 20px;">
-                    <span style="font-size: 9px; opacity: 0.3; text-transform: uppercase;">Stage 01</span>
-                    <h4 style="font-size: 12px; margin: 20px 0; letter-spacing: 0.2em; text-transform: uppercase;">Concept / 概念</h4>
-                    <p style="font-size: 11px; opacity: 0.6;">调研场地属性与品牌内核，确立 3P 核心方向与视觉基调。</p>
-                </div>
-                </div>
-        </div>
-    </div>
-
-    <div id="modal-contact" class="modal-overlay" onclick="hideModal('modal-contact')" style="justify-content: center; align-items: center; display: none;">
-        <div class="text-center" onclick="event.stopPropagation()">
-            <button onclick="hideModal('modal-contact')" style="position: fixed; top: 40px; right: 40px;" class="nav-link text-black">CLOSE / 关闭</button>
-            <div style="margin-bottom: 60px;">
-                <p style="font-size: 9px; opacity: 0.3; letter-spacing: 0.4em; text-transform: uppercase; margin-bottom: 15px;">WeChat / 微信</p>
-                <p style="font-size: 24px; font-weight: 100; letter-spacing: 0.2em;">wenwenwhite1</p>
-            </div>
-            <div>
-                <p style="font-size: 9px; opacity: 0.3; letter-spacing: 0.4em; text-transform: uppercase; margin-bottom: 15px;">Email / 邮箱</p>
-                <p style="font-size: 24px; font-weight: 100; letter-spacing: 0.1em;">nilinwen@gmail.com</p>
-            </div>
-        </div>
-    </div>
-
-    <div id="modal-mizuno" class="modal-overlay" onclick="hideModal('modal-mizuno')">
-        <div class="max-w-6xl mx-auto w-full" onclick="event.stopPropagation()" style="margin-top: 100px;">
-            <button onclick="hideModal('modal-mizuno')" style="position: fixed; top: 40px; right: 40px;" class="nav-link text-black">CLOSE / 关闭</button>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-20">
-                <div style="aspect-ratio: 3/4; background: #E8E8E8;"></div>
-                <div>
-                    <h2 style="font-size: 32px; font-weight: 100; font-style: italic; margin-bottom: 40px; text-transform: uppercase;">Mizuno Tech Shibumi</h2>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.2em; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 40px; margin-bottom: 40px;">
-                        <span style="opacity: 0.3;">Category / 分类</span><span>Retail / 零售</span>
-                        <span style="opacity: 0.3;">Area / 面积</span><span>240 SQM</span>
-                        <span style="opacity: 0.3;">Year / 时间</span><span>2026</span>
+    <div id="modal-about" class="modal-overlay px-10 py-20 overflow-y-auto no-scrollbar" onclick="hideModal('modal-about')">
+        <div class="max-w-6xl mx-auto w-full relative" onclick="event.stopPropagation()">
+            <button onclick="hideModal('modal-about')" class="fixed top-10 right-10 text-[10px] tracking-ultra opacity-40">CLOSE / 关闭</button>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-24 pt-20 text-neutral-600">
+                <div class="aspect-[3/4] bg-neutral-200 flex items-center justify-center italic text-[10px] opacity-20 uppercase tracking-ultra">Portrait / 肖像</div>
+                <div class="space-y-20">
+                    <div class="space-y-8">
+                        <h3 class="text-[10px] tracking-ultra opacity-30 uppercase italic text-black">English Perspective</h3>
+                        <p class="text-xl font-light leading-relaxed italic">"Design is an act of muscle memory. Precision in space. Rhythm in motion."</p>
                     </div>
-                    <p style="font-size: 13px; font-weight: 300; color: #666; line-height: 2;">基于 Tech Shibumi 理念，利用喷砂铝材与自然木质，创造出精准却不失温度的零售体验。</p>
+                    <div class="space-y-8 pt-12 border-t border-black/5">
+                        <h3 class="text-[10px] tracking-ultra opacity-30 uppercase italic text-black">中文理念</h3>
+                        <p class="text-lg font-light leading-loose">设计是一场关于肌肉记忆的修行。基于 3P 框架（精准、性能、目的），寻找空间中的“留白”，让静谧成为最高级的精准。</p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <div id="modal-contact" class="modal-overlay items-center justify-center" onclick="hideModal('modal-contact')">
+        <div class="max-w-xl w-full text-center" onclick="event.stopPropagation()">
+            <button onclick="hideModal('modal-contact')" class="fixed top-10 right-10 text-[10px] tracking-ultra opacity-40">CLOSE / 关闭</button>
+            <div class="space-y-16 italic font-thin text-2xl tracking-widest">
+                <div><p class="text-[9px] uppercase tracking-ultra opacity-30 mb-4 not-italic">WeChat / 微信</p>wenwenwhite1</div>
+                <div><p class="text-[9px] uppercase tracking-ultra opacity-30 mb-4 not-italic">Email / 邮箱</p>nilinwen@gmail.com</div>
+                <div><p class="text-[9px] uppercase tracking-ultra opacity-30 mb-4 not-italic">Mobile / 手机</p>150 0008 0664</div>
+            </div>
+        </div>
+    </div>
+
+    <template id="project-modal-template">
+        <div class="max-w-6xl mx-auto w-full relative" onclick="event.stopPropagation()">
+            <button class="close-btn fixed top-10 right-10 text-[10px] tracking-ultra opacity-40">CLOSE / 关闭</button>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-24 pt-20 text-neutral-600">
+                <div class="space-y-12">
+                    <div class="aspect-[3/4] bg-neutral-200 flex items-center justify-center italic text-[10px] opacity-20 uppercase tracking-ultra">Main Visual / 主要展示</div>
+                    <div class="aspect-[4/3] bg-neutral-300 flex items-center justify-center italic text-[10px] opacity-20 uppercase tracking-ultra">Detail / 细节展示</div>
+                </div>
+                <div class="md:sticky md:top-20 h-fit">
+                    <h2 class="project-title text-4xl font-thin italic mb-12 tracking-tight uppercase opacity-80 text-black">Project Name</h2>
+                    <div class="grid grid-cols-2 gap-y-6 text-[10px] uppercase tracking-widest border-b border-black/5 pb-12 mb-12">
+                        <span class="opacity-30 italic text-black">Category / 分类</span><span class="project-cat">---</span>
+                        <span class="opacity-30 italic text-black">Area / 面积</span><span class="project-area text-black">--- SQM</span>
+                        <span class="opacity-30 italic text-black">Year / 时间</span><span class="project-year">---</span>
+                    </div>
+                    <p class="project-desc text-[13px] font-light leading-loose text-justify">
+                        该项目基于 WIM Design 核心设计逻辑，深入探讨了空间、光影与功能之间的平衡。通过精密的材质组合与极简的几何构造，呈现出具有中性力量感的建筑美感。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <div id="modal-mizuno" class="modal-overlay px-10 py-20 overflow-y-auto no-scrollbar" onclick="hideModal('modal-mizuno')"></div>
+    <div id="modal-box" class="modal-overlay px-10 py-20 overflow-y-auto no-scrollbar" onclick="hideModal('modal-box')"></div>
+    <div id="modal-bistro" class="modal-overlay px-10 py-20 overflow-y-auto no-scrollbar" onclick="hideModal('modal-bistro')"></div>
+    <div id="modal-fish" class="modal-overlay px-10 py-20 overflow-y-auto no-scrollbar" onclick="hideModal('modal-fish')"></div>
+    <div id="modal-moss" class="modal-overlay px-10 py-20 overflow-y-auto no-scrollbar" onclick="hideModal('modal-moss')"></div>
+    <div id="modal-retail2" class="modal-overlay px-10 py-20 overflow-y-auto no-scrollbar" onclick="hideModal('modal-retail2')"></div>
 
     <script>
+        const projects = [
+            { id: 'modal-mizuno', title: 'Mizuno Tech Shibumi', cat: 'Retail / 零售', area: '240', year: '2026' },
+            { id: 'modal-box', title: 'Box Pavilion', cat: 'Exhibition / 展览', area: '120', year: '2025' },
+            { id: 'modal-bistro', title: 'Woven Mind Bistro', cat: 'F&B / 餐饮', area: '180', year: '2026' },
+            { id: 'modal-fish', title: 'Fish Market Exhibition', cat: 'Exhibition / 展览', area: '350', year: '2026' },
+            { id: 'modal-moss', title: 'Moss Dance Studio', cat: 'Sport / 运动', area: '210', year: '2025' },
+            { id: 'modal-retail2', title: 'WIM Concept Store', cat: 'Retail / 零售', area: '150', year: '2026' }
+        ];
+
+        const template = document.getElementById('project-modal-template');
+        projects.forEach(p => {
+            const container = document.getElementById(p.id);
+            if (container) {
+                const content = template.content.cloneNode(true);
+                content.querySelector('.project-title').textContent = p.title;
+                content.querySelector('.project-cat').textContent = p.cat;
+                content.querySelector('.project-area').textContent = p.area;
+                content.querySelector('.project-year').textContent = p.year;
+                content.querySelector('.close-btn').onclick = () => hideModal(p.id);
+                container.appendChild(content);
+            }
+        });
+
+        function applyFilter(cat, element) {
+            const btns = document.querySelectorAll('.filter-btn');
+            btns.forEach(b => b.classList.remove('filter-active'));
+            element.classList.add('filter-active');
+            const boxes = document.querySelectorAll('.project-box');
+            boxes.forEach(box => {
+                box.style.display = (cat === 'all' || box.classList.contains(cat)) ? 'block' : 'none';
+            });
+        }
+
         function showModal(id) {
             const m = document.getElementById(id);
             if(m) { 
                 m.classList.add('active'); 
                 document.body.style.overflow = 'hidden'; 
-                // 针对 Contact 这种居中弹窗的特殊处理
-                if(id === 'modal-contact') m.style.display = 'flex';
             }
         }
+
         function hideModal(id) {
             const m = document.getElementById(id);
             if(m) { 
                 m.classList.remove('active'); 
                 document.body.style.overflow = 'auto'; 
-                if(id === 'modal-contact') m.style.display = 'none';
             }
         }
-        function applyFilter(cat, btn) {
-            const btns = document.querySelectorAll('.filter-btn');
-            btns.forEach(b => b.classList.remove('filter-active'));
-            btn.classList.add('filter-active');
-            const projects = document.querySelectorAll('.project-box');
-            projects.forEach(p => {
-                p.style.display = (cat === 'all' || p.classList.contains(cat)) ? 'block' : 'none';
-            });
-        }
+
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
-                const active = document.querySelector('.modal-overlay.active');
-                if (active) hideModal(active.id);
+                const openM = document.querySelector('.modal-overlay.active');
+                if (openM) hideModal(openM.id);
                 else window.location.href = "https://www.google.com/search?q=high+end+interior+detailing+standards";
             }
         });
